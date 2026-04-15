@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0d0e12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%230d0e12'/><text x='32' y='44' text-anchor='middle' font-size='28' fill='%234eaa8a' font-family='serif'>ج</text></svg>">
+<title>Abjad Gematria · Koran-Suche</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0e12;--bgc:#14161c;--bgk:#1a1c24;--bgkh:#25262f;--bgr:#181a21;--fg:#e6e3db;--fm:#8a8678;--fd:#5a574e;--bd:#282a32;--ac:#4eaa8a;--a2:#c9a84c;--ad:rgba(78,170,138,.12)}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI','Helvetica Neue',sans-serif;color:var(--fg);background:var(--bg);min-height:100dvh;-webkit-tap-highlight-color:transparent}
+input,button,select{font-family:inherit}.am{font-family:'Amiri',serif}
+.hdr{background:linear-gradient(135deg,#0f1018,#141520,#0f1018);border-bottom:1px solid var(--bd);padding:20px 14px 12px;text-align:center}
+.hdr h1{font-size:21px;font-weight:300;background:linear-gradient(90deg,var(--ac),#8edbc4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ct{max-width:700px;margin:0 auto;padding:12px 10px}
+.iw{position:relative}.iw input{width:100%;padding:11px 90px 11px 14px;font-size:20px;font-family:'Amiri',serif;background:var(--bgc);color:var(--fg);border:2px solid var(--bd);border-radius:8px;outline:none;transition:border-color .2s;direction:rtl}.iw input:focus{border-color:var(--ac)}
+.iv{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:19px;font-weight:700;color:var(--ac);font-family:'Amiri',serif}
+.kr{display:flex;justify-content:center;gap:2px;margin-bottom:2px;direction:rtl}
+.kb{width:auto;min-width:30px;height:40px;font-family:'Amiri',serif;background:var(--bgk);color:var(--fg);border:1px solid var(--bd);border-radius:5px;cursor:pointer;transition:background .1s;padding:1px 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+.kb:hover,.kb:active{background:var(--bgkh)}.kb .kl{font-size:15px}.kb .kv{font-size:8px;color:var(--ac);font-weight:700;opacity:.7}.kx .kl{color:var(--a2)!important}
+.ka{padding:4px 12px;font-size:11px;font-family:'Amiri',serif;background:var(--bgk);color:var(--fg);border:1px solid var(--bd);border-radius:4px;cursor:pointer}
+.mb{padding:3px 8px;font-size:11px;border-radius:12px;border:1px solid var(--bd);background:var(--bgc);color:var(--fm);cursor:pointer;transition:all .1s}.mb.on{border:2px solid var(--ac);background:var(--ad);color:var(--ac);font-weight:700}
+.mi{padding:5px 9px;background:var(--ad);border-radius:5px;font-size:11px;color:var(--ac);margin-bottom:7px;border:1px solid rgba(78,170,138,.15)}
+.tab-bar{display:flex;gap:2px;margin:8px 0;background:var(--bgr);border-radius:8px;padding:2px}
+.tab-btn{flex:1;padding:6px 4px;font-size:11px;border:none;border-radius:6px;cursor:pointer;background:transparent;color:var(--fm);transition:all .15s}.tab-btn.on{background:var(--bgc);color:var(--ac);font-weight:600}
+.am-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:3px}
+.amr{display:flex;justify-content:space-between;padding:3px 7px;border-radius:4px;background:var(--bgr);font-size:11px}
+.wc{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--bgc);border-radius:6px;border:1px solid var(--bd);direction:rtl;margin-bottom:3px}
+.vc{background:var(--bgc);border-radius:7px;border:1px solid var(--bd);overflow:hidden;transition:border-color .2s;margin-bottom:4px}.vc.op{border-color:var(--ac)}
+.vh{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 10px;cursor:pointer;direction:rtl}
+.vd{padding:0 10px 10px;border-top:1px solid var(--bd);padding-top:8px;display:none}
+.dl{font-size:9px;color:var(--a2);font-weight:700;margin-bottom:2px;text-transform:uppercase;letter-spacing:1px}
+.lg{display:flex;flex-wrap:wrap;gap:2px;direction:rtl}.lc{text-align:center;padding:2px 3px;background:var(--bgr);border-radius:3px;min-width:24px}
+.vb{font-size:14px;font-weight:700;color:var(--ac);font-family:monospace;min-width:40px;text-align:left;flex-shrink:0}
+.sl{font-size:10px;color:var(--a2);font-weight:600;margin-bottom:3px}
+.nr{text-align:center;padding:24px;color:var(--fm);font-size:12px;background:var(--bgc);border-radius:8px;border:1px solid var(--bd)}
+.ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(50px,1fr));gap:3px;direction:rtl}
+.ac{text-align:center;padding:4px 0;background:var(--bgr);border-radius:4px}
+.ft{text-align:center;padding:18px 0 10px;font-size:9px;color:var(--fd);border-top:1px solid var(--bd);margin-top:18px}
+.status{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:10px;font-size:10px}
+.status.online{background:rgba(78,170,138,.15);color:var(--ac)}.status.offline{background:rgba(201,168,76,.15);color:var(--a2)}
+.status .dot{width:6px;height:6px;border-radius:50%}
+/* Quran word cards */
+.qwc{background:var(--bgc);border-radius:7px;border:1px solid var(--bd);margin-bottom:4px;overflow:hidden;transition:border-color .2s}.qwc.op{border-color:var(--ac)}
+.qwh{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 10px;direction:rtl}
+.qwtr{font-size:11px;color:var(--fm);font-style:italic;direction:ltr;display:inline-block;margin-right:5px}
+.qwr{font-size:10px;color:var(--fd);direction:ltr;text-align:left;margin-top:3px;line-height:1.6}
+.reflink{color:var(--a2);cursor:pointer;text-decoration:none;transition:color .15s}.reflink:hover{color:var(--ac);text-decoration:underline}
+.refnum{color:var(--fm)}
+.qwmore{color:var(--ac);cursor:pointer;font-size:10px;display:inline}.qwmore:hover{text-decoration:underline}
+.qwall{padding:4px 10px 8px;border-top:1px solid var(--bd);direction:ltr;text-align:left;font-size:10px;line-height:1.7;display:none;max-height:250px;overflow-y:auto}
+.qwall .rline{padding:2px 0;color:var(--fm);cursor:pointer;border-radius:3px;padding:2px 4px}.qwall .rline:hover{background:var(--bgr)}
+/* Verse preview popup */
+.vprev{margin:6px 0 4px;padding:8px 10px;background:var(--bgr);border-radius:6px;border:1px solid var(--bd);animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.vprev .vtxt{font-family:'Amiri',serif;font-size:15px;line-height:1.7;direction:rtl;color:var(--fg)}
+.vprev .vtxt .hl{background:rgba(201,168,76,.25);color:var(--a2);border-radius:3px;padding:0 2px;font-weight:700}
+.vprev .vde{font-size:12px;color:var(--fm);line-height:1.5;direction:ltr;margin-top:5px;border-top:1px solid var(--bd);padding-top:5px}
+.vprev .vtr{font-size:11px;color:var(--fg);font-style:italic;line-height:1.5;direction:ltr;margin-top:3px}
+.vprev .vclose{float:right;cursor:pointer;color:var(--fd);font-size:11px;margin-left:6px}.vprev .vclose:hover{color:var(--ac)}
+@media(max-width:420px){.kb{min-width:26px;height:36px}.kb .kl{font-size:14px}.kb .kv{font-size:7px}.ct{padding:8px 6px}}
+</style>
+</head>
+<body>
+<div class="hdr">
+ <div class="am" style="font-size:14px;letter-spacing:3px;color:var(--a2);margin-bottom:2px">حساب الجمّل</div>
+ <h1>Abjad Gematria · Koran-Suche</h1>
+ <p id="hInfo" style="margin:4px 0 0;font-size:10px;color:var(--fm)">Initialisiere…</p>
+ <div style="margin-top:4px"><span id="dbStatus" class="status offline"><span class="dot" style="background:var(--a2)"></span>Lade…</span></div>
+</div>
+<div class="ct">
+ <div class="iw"><input id="inp" placeholder="عدد أو كلمة عربية — Zahl oder Wort…" autocomplete="off"><div id="inpV" class="iv" style="display:none"></div></div>
+ <div style="display:flex;justify-content:space-between;align-items:center;margin:4px 0">
+  <button id="kbT" onclick="togKb()" style="background:none;border:none;color:var(--ac);cursor:pointer;font-size:11px;text-decoration:underline;text-underline-offset:3px">Tastatur ▲</button>
+  <button id="clr" onclick="clrI()" style="background:none;border:none;color:var(--fm);cursor:pointer;font-size:11px;display:none">✕</button>
+ </div>
+ <div id="kbd"></div>
+ <div style="margin:8px 0 2px;font-size:11px;color:var(--fm);font-weight:600">Methode:</div>
+ <div id="mBtns" style="display:flex;flex-wrap:wrap;gap:4px;margin:4px 0"></div>
+ <div id="mInfo" class="mi"></div>
+ <div class="tab-bar">
+  <button class="tab-btn on" data-t="all" onclick="setTab('all')">Alles</button>
+  <button class="tab-btn" data-t="words" onclick="setTab('words')">Wörter</button>
+  <button class="tab-btn" data-t="qwords" onclick="setTab('qwords')">Koran-Wörter</button>
+  <button class="tab-btn" data-t="verses" onclick="setTab('verses')">Verse</button>
+ </div>
+ <div style="display:flex;gap:10px;margin:5px 0 10px;font-size:11px;align-items:center">
+  <div style="margin-left:auto;display:flex;align-items:center;gap:3px">
+   <span style="font-size:10px;color:var(--fd)">Max:</span>
+   <select id="maxR" onchange="doS()" style="background:var(--bgk);color:var(--fg);border:1px solid var(--bd);border-radius:3px;font-size:10px;padding:1px 3px">
+    <option value="30">30</option><option value="60" selected>60</option><option value="150">150</option><option value="300">300</option>
+   </select>
+  </div>
+ </div>
+ <div id="allM" style="display:none"></div>
+ <div id="res"></div>
+ <div id="aRef"></div>
+ <div class="ft">Quran: Uthmani via quran-json (CC) · Bubenheim/Elyas via alquran.cloud · Offline nach erstem Laden</div>
+</div>
+<script>
+// ═══ ABJAD ═══
+const A={'\u0627':1,'\u0623':1,'\u0625':1,'\u0622':1,'\u0671':1,'\u0621':1,'\u0628':2,'\u062C':3,'\u062F':4,'\u0647':5,'\u0629':5,'\u0648':6,'\u0632':7,'\u062D':8,'\u0637':9,'\u064A':10,'\u0649':10,'\u0643':20,'\u0644':30,'\u0645':40,'\u0646':50,'\u0633':60,'\u0639':70,'\u0641':80,'\u0635':90,'\u0642':100,'\u0631':200,'\u0634':300,'\u062A':400,'\u062B':500,'\u062E':600,'\u0630':700,'\u0636':800,'\u0638':900,'\u063A':1000};
+const AO="\u0627\u0628\u062C\u062F\u0647\u0648\u0632\u062D\u0637\u064A\u0643\u0644\u0645\u0646\u0633\u0639\u0641\u0635\u0642\u0631\u0634\u062A\u062B\u062E\u0630\u0636\u0638\u063A";
+const OD={};for(let i=0;i<AO.length;i++)OD[AO[i]]=i+1;
+OD['\u0623']=1;OD['\u0625']=1;OD['\u0622']=1;OD['\u0671']=1;OD['\u0621']=1;OD['\u0629']=5;OD['\u0649']=10;
+const KT={};for(const[k,v]of Object.entries(A)){let r=v;while(r>9&&r%10===0)r/=10;KT[k]=r;}
+const AB={};for(let i=0;i<AO.length;i++)AB[AO[i]]=AO[AO.length-1-i];
+AB['\u0623']=AB['\u0627'];AB['\u0625']=AB['\u0627'];AB['\u0622']=AB['\u0627'];AB['\u0671']=AB['\u0627'];AB['\u0621']=AB['\u0627'];AB['\u0629']=AB['\u0647'];AB['\u0649']=AB['\u064A'];
+const KI={};let _ks=0;for(const c of AO){_ks+=(A[c]||0);KI[c]=_ks;}
+KI['\u0623']=KI['\u0627'];KI['\u0625']=KI['\u0627'];KI['\u0622']=KI['\u0627'];KI['\u0671']=KI['\u0627'];KI['\u0621']=KI['\u0627'];KI['\u0629']=KI['\u0647'];KI['\u0649']=KI['\u064A'];
+
+function st(t){return t.replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7\u06E8\u06EA-\u06ED\u08D3-\u08E1\u08E3-\u08FF\u0640\u06E5\u06E6]/g,'');}
+function gl(t){return[...st(t)].filter(c=>A[c]!==undefined);}
+
+// ═══ TRANSLITERATION (DMG / DIN 31635) ═══
+const TRL={
+ '\u0627':'ā',   // ا alif
+ '\u0623':'ʾa',  // أ alif hamza oben
+ '\u0625':'ʾi',  // إ alif hamza unten
+ '\u0622':'ʾā',  // آ alif madda
+ '\u0671':'a',   // ٱ alif wasla
+ '\u0621':'ʾ',   // ء hamza
+ '\u0628':'b',   // ب bāʾ
+ '\u062A':'t',   // ت tāʾ
+ '\u062B':'ṯ',   // ث ṯāʾ (DMG: ṯ, nicht th)
+ '\u062C':'ǧ',   // ج ǧīm (DMG: ǧ, nicht j)
+ '\u062D':'ḥ',   // ح ḥāʾ
+ '\u062E':'ḫ',   // خ ḫāʾ (DMG: ḫ, nicht kh)
+ '\u062F':'d',   // د dāl
+ '\u0630':'ḏ',   // ذ ḏāl (DMG: ḏ, nicht dh)
+ '\u0631':'r',   // ر rāʾ
+ '\u0632':'z',   // ز zāy
+ '\u0633':'s',   // س sīn
+ '\u0634':'š',   // ش šīn (DMG: š, nicht sh)
+ '\u0635':'ṣ',   // ص ṣād
+ '\u0636':'ḍ',   // ض ḍād
+ '\u0637':'ṭ',   // ط ṭāʾ
+ '\u0638':'ẓ',   // ظ ẓāʾ
+ '\u0639':'ʿ',   // ع ʿain
+ '\u063A':'ġ',   // غ ġain (DMG: ġ, nicht gh)
+ '\u0641':'f',   // ف fāʾ
+ '\u0642':'q',   // ق qāf
+ '\u0643':'k',   // ك kāf
+ '\u0644':'l',   // ل lām
+ '\u0645':'m',   // م mīm
+ '\u0646':'n',   // ن nūn
+ '\u0647':'h',   // ه hāʾ
+ '\u0629':'h',   // ة tāʾ marbūṭa
+ '\u0648':'w',   // و wāw
+ '\u0649':'ā',   // ى alif maqṣūra
+ '\u064A':'y',   // ي yāʾ
+ '\u0626':'ʾ',   // ئ hamza auf yāʾ
+ '\u0624':'ʾ',   // ؤ hamza auf wāw
+};
+function trl(word){
+ const clean=st(word);
+ let out='';
+ for(const c of clean){
+  if(TRL[c])out+=TRL[c];
+  else if(c===' ')out+=' ';
+ }
+ // al- prefix: ال at start or after space
+ out=out.replace(/^āl(?=[a-zāḏḍġḥḫǧṣṭṯẓšʿʾ])/,'al-').replace(/\s+āl(?=[a-zāḏḍġḥḫǧṣṭṯẓšʿʾ])/g,' al-');
+ return out;
+}
+
+// ═══ METHODS ═══
+const Me={
+ standard:{n:"Ḥisāb al-Jummal",a:"حساب الجمّل",d:"Standard-Abjad",f:t=>gl(t).reduce((s,c)=>s+(A[c]||0),0)},
+ ordinal:{n:"Tartībī",a:"ترتيبي",d:"Ordinal (1–28)",f:t=>gl(t).reduce((s,c)=>s+(OD[c]||0),0)},
+ katan:{n:"Ṣaghīr",a:"صغير",d:"Reduziert",f:t=>gl(t).reduce((s,c)=>s+(KT[c]||0),0)},
+ perati:{n:"Murabbaʿ",a:"مربّع",d:"Quadriert",f:t=>gl(t).reduce((s,c)=>{const v=A[c]||0;return s+v*v},0)},
+ musafi:{n:"Muḍāf",a:"مضاف",d:"Standard+Buchstaben",f:t=>{const l=gl(t);return l.reduce((s,c)=>s+(A[c]||0),0)+l.length}},
+ kolel:{n:"Kullī",a:"كلّي",d:"Standard+Wörter",f:t=>{const w=st(t).split(/\s+/).filter(x=>x.length);return gl(t).reduce((s,c)=>s+(A[c]||0),0)+w.length}},
+ atbash:{n:"ʿAksi",a:"عكسي",d:"Spiegel",f:t=>gl(t).reduce((s,c)=>{const m=AB[c];return s+(m?(A[m]||0):0)},0)},
+ boneh:{n:"Tarākumī",a:"تراكمي",d:"Kumulativ",f:t=>{let tot=0,run=0;for(const c of gl(t)){run+=(A[c]||0);tot+=run}return tot}},
+ kidmi:{n:"Tathlīthī",a:"تثليثي",d:"Dreieckswert",f:t=>gl(t).reduce((s,c)=>s+(KI[c]||0),0)},
+ droot:{n:"Jadhr Raqamī",a:"جذر رقمي",d:"Digitalwurzel",f:t=>{let v=gl(t).reduce((s,c)=>s+(A[c]||0),0);while(v>9)v=[...String(v)].reduce((s,d)=>s+Number(d),0);return v}},
+ cube:{n:"Mukʿab",a:"مكعّب",d:"Kubiert",f:t=>gl(t).reduce((s,c)=>{const v=A[c]||0;return s+v*v*v},0)},
+ pos:{n:"Mawḍiʿī",a:"موضعي",d:"Wert×Position",f:t=>{let tot=0,p=1;for(const c of gl(t)){tot+=(A[c]||0)*p;p++}return tot}},
+ sq:{n:"Jummal²",a:"جمّل²",d:"Standardwert²",f:t=>{const v=gl(t).reduce((s,c)=>s+(A[c]||0),0);return v*v}}
+};
+
+// ═══ BUILT-IN WORDS ═══
+const W=[
+["الله","Allāh","Gott"],["الرحمن","ar-Raḥmān","Allerbarmer"],["الرحيم","ar-Raḥīm","Barmherzige"],
+["الملك","al-Malik","König"],["القدوس","al-Quddūs","Heilige"],["السلام","as-Salām","Friede"],
+["العزيز","al-ʿAzīz","Allmächtige"],["الجبار","al-Jabbār","Gewaltige"],["الخالق","al-Khāliq","Schöpfer"],
+["الغفور","al-Ghafūr","Vergebende"],["الودود","al-Wadūd","Liebevolle"],["الحكيم","al-Ḥakīm","Allweise"],
+["العليم","al-ʿAlīm","Allwissende"],["السميع","as-Samīʿ","Allhörende"],["البصير","al-Baṣīr","Allsehende"],
+["الحي","al-Ḥayy","Lebendige"],["القيوم","al-Qayyūm","Beständige"],["النور","an-Nūr","Licht"],
+["الصمد","aṣ-Ṣamad","Absolute"],["الواحد","al-Wāḥid","Einzige"],["الاحد","al-Aḥad","Eine"],
+["الرب","ar-Rabb","Herr"],["اسلام","Islām","Islam"],["ايمان","Īmān","Glaube"],
+["توحيد","Tawḥīd","Einheit"],["شهادة","Shahādah","Bekenntnis"],["صلاة","Ṣalāh","Gebet"],
+["زكاة","Zakāh","Almosen"],["صوم","Ṣawm","Fasten"],["حج","Ḥajj","Pilgerfahrt"],
+["قران","Qurʾān","Koran"],["سورة","Sūrah","Sure"],["اية","Āyah","Vers"],["كتاب","Kitāb","Buch"],
+["وحي","Waḥy","Offenbarung"],["حلال","Ḥalāl","Erlaubt"],["حرام","Ḥarām","Verboten"],
+["حديث","Ḥadīth","Überlieferung"],["تقوى","Taqwā","Gottesfurcht"],["توبة","Tawbah","Reue"],
+["رحمة","Raḥmah","Barmherzigkeit"],["بركة","Barakah","Segen"],["نعمة","Niʿmah","Gnade"],
+["عدل","ʿAdl","Gerechtigkeit"],["حق","Ḥaqq","Wahrheit"],["جنة","Jannah","Paradies"],
+["نار","Nār","Hölle"],["ملك","Malak","Engel"],["شيطان","Shayṭān","Satan"],
+["محمد","Muḥammad","Muhammad"],["ابراهيم","Ibrāhīm","Abraham"],["موسى","Mūsā","Moses"],
+["عيسى","ʿĪsā","Jesus"],["نوح","Nūḥ","Noah"],["ادم","Ādam","Adam"],
+["يوسف","Yūsuf","Joseph"],["داود","Dāwūd","David"],["سليمان","Sulaymān","Salomo"],
+["ذكر","Dhikr","Gedenken"],["دعاء","Duʿāʾ","Bittgebet"],["صبر","Ṣabr","Geduld"],
+["علم","ʿIlm","Wissen"],["حكمة","Ḥikmah","Weisheit"],["نور","Nūr","Licht"],
+["روح","Rūḥ","Geist"],["نفس","Nafs","Seele"],["قلب","Qalb","Herz"],
+["عقل","ʿAql","Verstand"],["ميزان","Mīzān","Waage"],["صراط","Ṣirāṭ","Weg"],
+["سماء","Samāʾ","Himmel"],["ارض","Arḍ","Erde"],["ماء","Māʾ","Wasser"],
+["شمس","Shams","Sonne"],["قمر","Qamar","Mond"],["بحر","Baḥr","Meer"],
+["حقيقة","Ḥaqīqah","Wirklichkeit"],["معرفة","Maʿrifah","Erkenntnis"],
+["سر","Sirr","Geheimnis"],["حرف","Ḥarf","Buchstabe"],["كيمياء","Kīmiyāʾ","Alchemie"],
+["رسول","Rasūl","Gesandter"],["نبي","Nabī","Prophet"],["عبد","ʿAbd","Diener"],
+["دين","Dīn","Religion"],["حياة","Ḥayāh","Leben"],["موت","Mawt","Tod"],
+["سلام","Salām","Friede"],["بسملة","Basmalah","Basmala"],["كلمة","Kalimah","Wort"],
+["وجود","Wujūd","Existenz"],["خلق","Khalq","Schöpfung"],["قدر","Qadar","Bestimmung"],
+["عرش","ʿArsh","Thron"],["لوح","Lawḥ","Tafel"],["قلم","Qalam","Feder"],
+["فاتحة","Fātiḥah","Eröffnende"],["اخلاص","Ikhlāṣ","Aufrichtigkeit"],
+["جهاد","Jihād","Anstrengung"],["امة","Ummah","Gemeinschaft"],["شريعة","Sharīʿah","Scharia"]
+].map(([a,t,m])=>({a,t,m}));
+
+// ═══ STATE ═══
+let cM='standard',tab='all',kbOn=true;
+let qV=null,qW=null,surahMap={};
+const vC={};
+const DB_NAME='abjad_gematria',DB_VER=2,STORE='quran';
+
+// ═══ INDEXEDDB ═══
+function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open(DB_NAME,DB_VER);r.onupgradeneeded=e=>{const db=e.target.result;if(!db.objectStoreNames.contains(STORE))db.createObjectStore(STORE)};r.onsuccess=e=>res(e.target.result);r.onerror=e=>rej(e)})}
+async function dbGet(k){const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readonly');const r=tx.objectStore(STORE).get(k);r.onsuccess=()=>res(r.result);r.onerror=e=>rej(e)})}
+async function dbSet(k,v){const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(v,k);tx.oncomplete=()=>res();tx.onerror=e=>rej(e)})}
+
+// ═══ INIT ═══
+document.addEventListener('DOMContentLoaded',async()=>{
+ buildKb();buildMb();updMi();showRef();
+ document.getElementById('inp').addEventListener('input',doS);
+ if('serviceWorker' in navigator){try{await navigator.serviceWorker.register('./sw.js')}catch(e){}}
+ await loadQuran();
+});
+
+async function loadQuran(){
+ try{const cached=await dbGet('verses');if(cached&&cached.length>6000){qV=cached;buildWordIndex();setOnline(true);doS();fetchAndStore().catch(()=>{});return;}}catch(e){}
+ document.getElementById('dbStatus').innerHTML='<span class="dot" style="background:var(--a2)"></span>Lade vom Server…';
+ await fetchAndStore();
+}
+async function fetchAndStore(){
+ try{
+  const r=await fetch('https://cdn.jsdelivr.net/npm/quran-json@3.1.2/dist/quran.json');const data=await r.json();
+  const verses=[];for(const s of data)for(const v of s.verses)verses.push({sid:s.id,sn:s.name,st:s.transliteration,vid:v.id,txt:v.text,std:Me.standard.f(v.text)});
+  qV=verses;buildWordIndex();try{await dbSet('verses',verses)}catch(e){}setOnline(true);doS();
+ }catch(e){setOnline(false);}
+}
+
+function buildWordIndex(){
+ if(!qV)return;
+ for(const v of qV)if(!surahMap[v.sid])surahMap[v.sid]={n:v.sn,t:v.st};
+ const map=new Map();
+ for(const v of qV){
+  const raw=st(v.txt);const words=raw.split(/\s+/).filter(w=>w.length>1);
+  for(const w of words){
+   const clean=w.replace(/[^\u0600-\u06FF]/g,'');if(clean.length<2)continue;
+   if(!map.has(clean))map.set(clean,{w:clean,std:Me.standard.f(clean),refs:[],cnt:0});
+   const e=map.get(clean);e.cnt++;e.refs.push({s:v.sid,v:v.vid});
+  }
+ }
+ qW=[...map.values()];
+ document.getElementById('hInfo').textContent=`${W.length} Wörter · ${qW.length.toLocaleString()} Koran-Wörter · ${qV.length.toLocaleString()} Verse · ${Object.keys(Me).length} Methoden`;
+}
+function setOnline(ok){const el=document.getElementById('dbStatus');if(ok){el.className='status online';el.innerHTML='<span class="dot" style="background:var(--ac)"></span>Datenbank bereit (offline)';}else{el.className='status offline';el.innerHTML='<span class="dot" style="background:#e55"></span>Offline';}}
+
+// ═══ KEYBOARD ═══
+const KR=[["\u0636","\u0635","\u062B","\u0642","\u0641","\u063A","\u0639","\u0647","\u062E","\u062D","\u062C","\u062F"],["\u0634","\u0633","\u064A","\u0628","\u0644","\u0627","\u062A","\u0646","\u0645","\u0643","\u0637"],["\u0626","\u0621","\u0624","\u0631","\u0649","\u0629","\u0648","\u0632","\u0638","\u0630"]];
+const KE=["\u0623","\u0625","\u0622","\u0671"];
+function buildKb(){const el=document.getElementById('kbd');let h='';for(const row of KR){h+='<div class="kr">';for(const l of row)h+=`<button class="kb" onclick="tK('${l}')"><span class="kl">${l}</span><span class="kv">${A[l]||''}</span></button>`;h+='</div>';}h+='<div class="kr">';for(const l of KE)h+=`<button class="kb kx" onclick="tK('${l}')"><span class="kl">${l}</span><span class="kv">${A[l]||''}</span></button>`;h+='</div><div style="display:flex;justify-content:center;gap:5px;direction:ltr;margin-top:2px"><button class="ka" onclick="tK(\' \')">مسافة</button><button class="ka" onclick="bksp()">⌫</button><button class="ka" style="background:var(--ad)" onclick="clrI()">مسح</button></div>';el.innerHTML=h;}
+function tK(c){const i=document.getElementById('inp');i.value+=c;i.focus();doS();}
+function bksp(){const i=document.getElementById('inp');i.value=i.value.slice(0,-1);doS();}
+function clrI(){document.getElementById('inp').value='';doS();}
+function togKb(){kbOn=!kbOn;document.getElementById('kbd').style.display=kbOn?'':'none';document.getElementById('kbT').textContent=kbOn?'Tastatur ▲':'⌨ Tastatur';}
+
+// ═══ METHOD / TAB ═══
+function buildMb(){const el=document.getElementById('mBtns');let h='';for(const[k,m]of Object.entries(Me))h+=`<button class="mb${k===cM?' on':''}" data-m="${k}" onclick="setM('${k}')" title="${m.d}">${m.n}</button>`;el.innerHTML=h;}
+function setM(k){cM=k;document.querySelectorAll('.mb').forEach(b=>b.classList.toggle('on',b.dataset.m===k));updMi();doS();}
+function updMi(){const m=Me[cM];document.getElementById('mInfo').innerHTML=`<strong>${m.n}</strong> (${m.a}) — ${m.d}`;}
+function setTab(t){tab=t;document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('on',b.dataset.t===t));doS();}
+
+// ═══ VERSE PREVIEW (click on ref) ═══
+async function showRefVerse(sid,vid,word,containerId){
+ const el=document.getElementById(containerId);
+ if(!el)return;
+ // Toggle off if already showing this verse
+ if(el.dataset.active===`${sid}:${vid}`){el.innerHTML='';el.dataset.active='';return;}
+ el.dataset.active=`${sid}:${vid}`;
+ el.innerHTML='<div style="font-size:10px;color:var(--fm);padding:4px">⏳ Lade Vers…</div>';
+
+ // Find verse text locally
+ const verse=qV?qV.find(x=>x.sid===sid&&x.vid===vid):null;
+ const sInfo=surahMap[sid]||{n:'?',t:'?'};
+
+ // Highlight the word in verse text
+ let vtxt=verse?verse.txt:'';
+ if(word&&vtxt){
+  // Create regex to find the word (ignoring diacritics)
+  const cleanW=st(word);
+  const cleanV=st(vtxt);
+  // Find position of word in cleaned text
+  const idx=cleanV.indexOf(cleanW);
+  if(idx>=0){
+   // Map back to original text positions
+   let ci=0,oi=0;const orig=[...vtxt];const cleaned=[...cleanV];
+   let startO=-1,endO=-1;
+   for(oi=0;oi<orig.length&&ci<cleaned.length;oi++){
+    if(st(orig[oi])===cleaned[ci]){
+     if(ci===idx)startO=oi;
+     if(ci===idx+cleanW.length-1){endO=oi+1;break;}
+     ci++;
+    }
+   }
+   if(startO>=0&&endO>0){
+    vtxt=vtxt.slice(0,startO)+'<span class="hl">'+vtxt.slice(startO,endO)+'</span>'+vtxt.slice(endO);
+   }
+  }
+ }
+
+ let h=`<div class="vprev"><span class="vclose" onclick="document.getElementById('${containerId}').innerHTML='';document.getElementById('${containerId}').dataset.active=''">✕</span>`;
+ h+=`<div style="font-size:9px;color:var(--a2);margin-bottom:3px">${sInfo.n} (${sInfo.t}) — ${sid}:${vid}</div>`;
+ h+=`<div class="vtxt">${vtxt}</div>`;
+
+ // Fetch translation
+ const key=sid+':'+vid;
+ let detail=vC[key];
+ if(!detail){
+  try{
+   const cached=await dbGet('tr_'+key);
+   if(cached){detail=cached;vC[key]=detail;}
+  }catch(e){}
+ }
+ if(!detail){
+  try{
+   const r=await fetch(`https://api.alquran.cloud/v1/ayah/${key}/editions/de.bubenheim,en.transliteration`);
+   const data=await r.json();
+   if(data.code===200&&data.data){
+    detail={de:data.data[0]?.text||null,tr:data.data[1]?.text||null};
+    vC[key]=detail;try{await dbSet('tr_'+key,detail)}catch(e){}
+   }
+  }catch(e){}
+ }
+ if(detail?.tr)h+=`<div class="vtr">${detail.tr}</div>`;
+ if(detail?.de)h+=`<div class="vde">${detail.de}</div>`;
+ h+='</div>';
+ el.innerHTML=h;
+}
+
+// ═══ EXPAND QURAN WORD REFS ═══
+function togQW(wid){
+ const card=document.getElementById(wid);
+ const allEl=document.getElementById(wid+'_all');
+ if(!allEl)return;
+ const isOpen=allEl.style.display==='block';
+ allEl.style.display=isOpen?'none':'block';
+ card.classList.toggle('op',!isOpen);
+}
+
+// ═══ VERSE CARD EXPAND ═══
+async function togV(id,sid,vid){
+ const card=document.getElementById(id);const det=document.getElementById(id+'_d');
+ if(det.style.display==='block'){det.style.display='none';card.classList.remove('op');return;}
+ card.classList.add('op');det.style.display='block';
+ const key=sid+':'+vid;
+ if(vC[key]){renderDet(det,vC[key],sid,vid);return;}
+ det.innerHTML='<div style="font-size:11px;color:var(--fm);padding:4px 0">⏳ Lade…</div>';
+ try{const cached=await dbGet('tr_'+key);if(cached){vC[key]=cached;renderDet(det,cached,sid,vid);return;}}catch(e){}
+ try{
+  const r=await fetch(`https://api.alquran.cloud/v1/ayah/${key}/editions/de.bubenheim,en.transliteration`);
+  const data=await r.json();
+  if(data.code===200&&data.data){const d={de:data.data[0]?.text||null,tr:data.data[1]?.text||null};vC[key]=d;try{await dbSet('tr_'+key,d)}catch(e){}renderDet(det,d,sid,vid);}
+  else det.innerHTML='<div style="font-size:11px;color:var(--fm)">API-Fehler.</div>';
+ }catch(e){det.innerHTML='<div style="font-size:11px;color:var(--fm)">Offline — nicht verfügbar.</div>';}
+}
+function renderDet(el,d,sid,vid){
+ const v=qV?qV.find(x=>x.sid===sid&&x.vid===vid):null;const letters=v?gl(v.txt):[];let h='';
+ if(d.tr)h+=`<div style="margin-bottom:6px"><div class="dl">Transliteration</div><div style="font-size:12px;color:var(--fg);font-style:italic;line-height:1.5;direction:ltr">${d.tr}</div></div>`;
+ if(d.de)h+=`<div style="margin-bottom:6px"><div class="dl">Deutsche Übersetzung</div><div style="font-size:12px;color:var(--fg);line-height:1.5;direction:ltr">${d.de}</div></div>`;
+ if(letters.length>0){h+=`<div style="margin-top:6px"><div class="dl">Buchstaben (${letters.length})</div><div class="lg">`;for(const c of letters)h+=`<div class="lc"><div class="am" style="font-size:14px;color:var(--fg)">${c}</div><div style="font-size:7px;color:var(--ac);font-weight:700">${A[c]||0}</div></div>`;h+='</div></div>';}
+ el.innerHTML=h;
+}
+
+// ═══ MAIN SEARCH ═══
+function doS(){
+ const raw=document.getElementById('inp').value.trim();
+ const isNum=/^\d+$/.test(raw),hasAr=/[\u0600-\u06FF]/.test(raw),fn=Me[cM].f;
+ document.getElementById('clr').style.display=raw?'':'none';
+ document.getElementById('aRef').style.display=raw?'none':'';
+ let tgt=null;if(isNum)tgt=parseInt(raw);else if(hasAr)tgt=fn(raw);
+ const vE=document.getElementById('inpV');
+ if(tgt!==null&&tgt>0){vE.textContent='= '+tgt.toLocaleString();vE.style.display='';}else vE.style.display='none';
+
+ const amE=document.getElementById('allM');
+ if(hasAr&&raw){
+  let h=`<div style="margin:8px 0;padding:10px;background:var(--bgc);border-radius:8px;border:1px solid var(--bd)"><div style="margin:0 0 5px;font-size:12px;color:var(--fm);font-weight:600">Alle Werte: <span class="am" style="font-size:18px;color:var(--fg);direction:rtl;display:inline-block">${raw}</span></div><div class="am-g">`;
+  for(const[k,m]of Object.entries(Me))h+=`<div class="amr"><span style="color:var(--fm)">${m.n} <span style="color:var(--fd)">(${m.a})</span></span><span style="font-weight:700;color:var(--ac);font-family:monospace">${m.f(raw).toLocaleString()}</span></div>`;
+  h+='</div></div>';amE.innerHTML=h;amE.style.display='';
+ }else amE.style.display='none';
+
+ const rE=document.getElementById('res');
+ if(tgt===null||tgt===0){rE.innerHTML='';return;}
+ const max=parseInt(document.getElementById('maxR').value);
+ const showW=tab==='all'||tab==='words',showQW=tab==='all'||tab==='qwords',showV=tab==='all'||tab==='verses';
+ let wR=[],qwR=[],vR=[];
+
+ if(showW)wR=W.map(w=>({...w,v:fn(w.a)})).filter(w=>w.v===tgt).slice(0,max);
+ if(showQW&&qW){if(cM==='standard')qwR=qW.filter(w=>w.std===tgt).slice(0,max);else qwR=qW.map(w=>({...w,v:fn(w.w)})).filter(w=>w.v===tgt).slice(0,max);}
+ if(showV&&qV){if(cM==='standard')vR=qV.filter(v=>v.std===tgt).slice(0,max);else vR=qV.filter(v=>fn(v.txt)===tgt).slice(0,Math.min(max,40));}
+
+ const total=wR.length+qwR.length+vR.length;
+ let h=`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px"><div style="font-size:13px;font-weight:600"><span style="color:var(--ac)">${Me[cM].n}</span> = <span style="color:var(--ac);font-family:monospace">${tgt.toLocaleString()}</span></div><span style="font-size:10px;color:var(--fm)">${total} Treffer</span></div>`;
+
+ // Built-in words
+ if(wR.length>0){
+  h+=`<div style="margin-bottom:8px"><div class="sl">Wörter (${wR.length})</div>`;
+  for(const w of wR){
+   const letters=gl(w.a);const lv=letters.map(c=>A[c]||0);
+   h+=`<div class="wc" style="flex-direction:column;align-items:stretch">`;
+   h+=`<div style="display:flex;justify-content:space-between;align-items:center">`;
+   h+=`<div><span class="am" style="font-size:17px;font-weight:700">${w.a}</span><span style="font-size:11px;color:var(--fm);margin-right:6px;font-style:italic;direction:ltr;display:inline-block"> (${w.t}) — ${w.m}</span></div>`;
+   h+=`<div class="vb">${w.v}</div></div>`;
+   // Letter breakdown
+   h+=`<div style="display:flex;flex-wrap:wrap;gap:2px;margin-top:4px;direction:rtl">`;
+   for(let li=0;li<letters.length;li++){
+    h+=`<div style="text-align:center;padding:1px 3px;background:var(--bgr);border-radius:3px;min-width:22px">`;
+    h+=`<div class="am" style="font-size:13px;color:var(--fg)">${letters[li]}</div>`;
+    h+=`<div style="font-size:7px;color:var(--ac);font-weight:700">${lv[li]}</div></div>`;
+   }
+   h+=`</div>`;
+   h+=`<div style="font-size:9px;color:var(--fd);margin-top:2px;direction:ltr">${lv.join(' + ')} = <strong style="color:var(--ac)">${w.v}</strong></div>`;
+   h+=`</div>`;
+  }
+  h+='</div>';
+ }
+
+ // ═══ QURAN WORDS with transliteration, abjad breakdown, clickable refs ═══
+ if(qwR.length>0){
+  h+=`<div style="margin-bottom:8px"><div class="sl">Koran-Wörter (${qwR.length})</div>`;
+  for(let qi=0;qi<qwR.length;qi++){
+   const w=qwR[qi];
+   const val=cM==='standard'?w.std:(w.v||fn(w.w));
+   const total=w.cnt||w.refs.length;
+   const showN=Math.min(3,w.refs.length);
+   const hasMore=total>3;
+   const wid='qw_'+qi;
+   const translitWord=trl(w.w);
+   const letters=gl(w.w);
+   const letterVals=letters.map(c=>A[c]||0);
+
+   h+=`<div class="qwc" id="${wid}">`;
+   h+=`<div class="qwh"><div style="flex:1;min-width:0">`;
+   // Word + transliteration + count
+   h+=`<span class="am" style="font-size:17px;font-weight:700">${w.w}</span>`;
+   h+=`<span class="qwtr">(${translitWord})</span>`;
+   h+=`<span style="font-size:10px;color:var(--fm)">(${total}×)</span>`;
+   // Letter-by-letter abjad values
+   h+=`<div style="display:flex;flex-wrap:wrap;gap:2px;margin-top:4px;direction:rtl">`;
+   for(let li=0;li<letters.length;li++){
+    h+=`<div style="text-align:center;padding:1px 3px;background:var(--bgr);border-radius:3px;min-width:22px">`;
+    h+=`<div class="am" style="font-size:13px;color:var(--fg)">${letters[li]}</div>`;
+    h+=`<div style="font-size:7px;color:var(--ac);font-weight:700">${letterVals[li]}</div></div>`;
+   }
+   h+=`</div>`;
+   // Sum formula
+   h+=`<div style="font-size:9px;color:var(--fd);margin-top:2px;direction:ltr">${letterVals.join(' + ')} = <strong style="color:var(--ac)">${val}</strong></div>`;
+   // Refs as clickable links
+   h+=`<div class="qwr">`;
+   for(let ri=0;ri<showN;ri++){
+    const ref=w.refs[ri];
+    const sI=surahMap[ref.s]||{n:'?',t:'?'};
+    h+=`<span class="reflink" onclick="showRefVerse(${ref.s},${ref.v},'${w.w.replace(/'/g,"\\'")}','${wid}_vp')">${sI.t} <span class="refnum">${ref.s}:${ref.v}</span></span>`;
+    if(ri<showN-1)h+=' · ';
+   }
+   if(hasMore)h+=` <span class="qwmore" onclick="togQW('${wid}')">… +${total-showN} weitere ▼</span>`;
+   h+=`</div>`;
+   // Verse preview container (for clicked refs)
+   h+=`<div id="${wid}_vp"></div>`;
+   h+=`</div><div class="vb">${val}</div></div>`;
+
+   // Expandable all-refs list
+   if(hasMore){
+    h+=`<div class="qwall" id="${wid}_all">`;
+    const seen=new Set();let shown=0;
+    for(const ref of w.refs){
+     const k=ref.s+':'+ref.v;if(seen.has(k))continue;seen.add(k);
+     const sI=surahMap[ref.s]||{n:'?',t:'?'};
+     h+=`<div class="rline" onclick="showRefVerse(${ref.s},${ref.v},'${w.w.replace(/'/g,"\\'")}','${wid}_vp')"><span style="color:var(--a2)">${sI.n}</span> (${sI.t}) — <strong>${ref.s}:${ref.v}</strong></div>`;
+     shown++;if(shown>=100){h+=`<div class="rline" style="color:var(--fd);cursor:default">… +${total-100} weitere</div>`;break;}
+    }
+    h+=`</div>`;
+   }
+   h+=`</div>`;
+  }
+  h+='</div>';
+ }
+
+ // Verses
+ if(vR.length>0){
+  h+=`<div style="margin-bottom:8px"><div class="sl">Koranverse (${vR.length})</div>`;
+  for(const v of vR){
+   const val=cM==='standard'?v.std:fn(v.txt);const id=`v${v.sid}_${v.vid}`;
+   h+=`<div class="vc" id="${id}"><div class="vh" onclick="togV('${id}',${v.sid},${v.vid})"><div style="flex:1;min-width:0"><div class="am" style="font-size:15px;font-weight:700;line-height:1.7">${v.txt}</div><div style="font-size:10px;color:var(--a2);margin-top:1px;direction:ltr;text-align:left">${v.sn} (${v.st}) ${v.sid}:${v.vid} <span style="color:var(--fd);font-size:9px">▼</span></div></div><div class="vb" style="margin-top:2px">${val}</div></div><div class="vd" id="${id}_d"></div></div>`;
+  }
+  h+='</div>';
+ }
+
+ if(total===0)h+=`<div class="nr">Keine Treffer für ${tgt.toLocaleString()}.</div>`;
+ rE.innerHTML=h;
+}
+
+// ═══ ABJAD REF ═══
+function showRef(){
+ const el=document.getElementById('aRef');
+ let h=`<div style="margin-top:14px;padding:10px;background:var(--bgc);border-radius:8px;border:1px solid var(--bd)"><div style="margin:0 0 6px;font-size:11px;color:var(--fm)">Abjad-Werte · حساب الجمّل</div><div class="ag">`;
+ for(const l of AO)h+=`<div class="ac"><div class="am" style="font-size:18px;color:var(--fg)">${l}</div><div style="font-size:9px;color:var(--ac);font-weight:700">${A[l]}</div></div>`;
+ h+=`</div><div class="am" style="margin-top:5px;font-size:10px;color:var(--fd);text-align:center">أبجد هوز حطي كلمن سعفص قرشت ثخذ ضظغ</div></div>`;
+ el.innerHTML=h;
+}
+</script>
+</body>
+</html>

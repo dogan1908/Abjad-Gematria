@@ -1,0 +1,15 @@
+{
+  "name": "Abjad Gematria · Koran-Suche",
+  "short_name": "Abjad حساب",
+  "description": "Arabische Abjad-Gematria mit Koran-Datenbank, 13 Methoden, Offline-fähig",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d0e12",
+  "theme_color": "#0d0e12",
+  "lang": "de",
+  "categories": ["education", "utilities"],
+  "icons": [
+    {"src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%230d0e12'/><text x='256' y='200' text-anchor='middle' font-size='140' fill='%234eaa8a' font-family='serif'>أبجد</text><text x='256' y='360' text-anchor='middle' font-size='80' fill='%23c9a84c' font-family='serif'>786</text></svg>", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}
