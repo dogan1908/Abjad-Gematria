@@ -4,7 +4,7 @@ const API_BASE = 'https://api.alquran.cloud/v1/ayah/';
 
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(['./', './index.html']))
+    caches.open(CACHE_NAME).then(cache => cache.addAll(['./', './index.html', './icon-192.png', './icon-512.png']))
   );
   self.skipWaiting();
 });
